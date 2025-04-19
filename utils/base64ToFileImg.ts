@@ -2,7 +2,6 @@ import * as fs from "fs";
 import path from "path";
 import { base64Stirng } from "../utils/base64";
 
-
 /**
  * Creates an image file from a binary string.
  *
@@ -16,7 +15,9 @@ import { base64Stirng } from "../utils/base64";
  */
 export function createImageFromBinaryString(binaryStr: string): File {
   const mimeType = "image/png";
-  const byteNumbers = atob(binaryStr).split("").map((c) => c.charCodeAt(0));
+  const byteNumbers = atob(binaryStr)
+    .split("")
+    .map((c) => c.charCodeAt(0));
   const byteArray = new Uint8Array(byteNumbers);
   const blob = new Blob([byteArray], { type: mimeType });
   const file = new File([blob], `${Date.now()}.png`, { type: mimeType });
@@ -56,23 +57,15 @@ export async function DownloadFile(file: File): Promise<void> {
 
   // Create a directory if it doesn't exist
   const outputDir: string = "./images"; // Set your desired path
-  await fs.promises.mkdir(outputDir, { recursive: true });
 
   // Get the full path to save the file
   const fullPath = path.join(outputDir, file.name);
 
   // Save the file to the filesystem
-  await fs.promises.writeFile(fullPath, buffer);
+  await fs.writeFileSync(fullPath, buffer);
   console.log(`File saved at ${fullPath}`);
 }
 
-
-
-
-
-
-
 const file = createImageFromBinaryString(base64Stirng);
-
 
 DownloadFile(file);
